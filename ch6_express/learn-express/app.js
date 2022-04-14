@@ -6,6 +6,8 @@ const dotenv = require('dotenv');
 const path = require('path');
 
 dotenv.config()
+const indexRouter = require('./routes'); // index.js는 생략 가능함. ./routes/index.js 와 동일함.
+const userRouter = require('./routes/user')
 
 const app = express();
 // 포트 세팅
@@ -26,6 +28,8 @@ app.use(session({
   },
   name: 'session-cookie',
 }))
+app.use('/', indexRouter);
+app.use('/user', userRouter);
 
 const multer = require('multer');
 const fs = require('fs');
@@ -83,6 +87,11 @@ app.use((err, req, res, next) => {
   console.error(err);
   res.status(500).send(err.message);
 })
+
+app.use((req, res, next) => {
+  res.status(404).send('Not Found');
+})
+
 // get 요청에서 작동하는 동작
 // app.get('/', (req, res) => {
 //   // 텍스트로 보낼 때
