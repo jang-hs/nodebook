@@ -1,6 +1,6 @@
 const Sequelize = require('sequelize');
 
-module.exports = class User extends Sequelize.Model { // Sequelize.Model 을 확장한 클래스로 선언
+module.exports = class User extends Sequelize.Model {// Sequelize.Model 을 확장한 클래스로 선언
   // static init 에서는 테이블에 대한 설정
   static init(sequelize) {
     // sequelize는 알아서 id를 기본 키로 연결함.
@@ -14,8 +14,8 @@ module.exports = class User extends Sequelize.Model { // Sequelize.Model 을 확
         type: Sequelize.INTEGER.UNSIGNED,
         allowNull: false,
       },
-      married : {
-        type: Sequelize.TEXT,
+      married: {
+        type: Sequelize.BOOLEAN,
         allowNull: false,
       },
       comment: {
@@ -40,6 +40,6 @@ module.exports = class User extends Sequelize.Model { // Sequelize.Model 을 확
   }
   // static associate 에서는 다른 모델과의 관계
   static associate(db) { // 1:N 관계
-    db.User.hasMany(db.Comment, { foreignKey: 'commenter', sourceKey: 'id'});
+    db.User.hasMany(db.Comment, { foreignKey: 'commenter', sourceKey: 'id' });
   }
-}
+};
