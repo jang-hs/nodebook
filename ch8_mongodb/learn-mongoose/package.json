@@ -1,0 +1,20 @@
+{
+  "name": "learn-mongoose",
+  "version": "0.0.1",
+  "description": "learn mongoose",
+  "main": "app.js",
+  "scripts": {
+    "start": "nodemon app"
+  },
+  "author": "JANG",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.18.1",
+    "mongoose": "^6.3.3",
+    "morgan": "^1.10.0",
+    "nunjucks": "^3.2.3"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.16"
+  }
+}
