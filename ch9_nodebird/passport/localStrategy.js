@@ -6,7 +6,7 @@ const User = require('../models/user');
 
 module.exports = () => {
   // 전략에 관한 설정을 하는 곳. 로그인 라우터의 req.body속성명을 usernameField,passwordField 필드에 입력해준다.
-  passport.new(new LocalStrategy({
+  passport.use(new LocalStrategy({
     usernameField: 'email',
     passwordField: 'password',
   }, async (email, password, done) => {

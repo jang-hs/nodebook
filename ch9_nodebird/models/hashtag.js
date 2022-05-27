@@ -19,7 +19,7 @@ module.exports = class Hashtag extends Sequelize.Model {
       collate: 'utf8mb4_general_ci',
     });
   }
-  static associatie(db){
+  static associate(db){
     // Post와 Hashtag는 N:M 관계
     db.Hashtag.belongsToMany(db.Post, { through: 'PostHashtag' });
   }

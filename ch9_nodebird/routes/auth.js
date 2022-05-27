@@ -22,7 +22,7 @@ router.post('/join', isNotLoggedIn, async (req, res, next) => {
     await User.create({
       email,
       nick,
-      passowrd: hash,
+      password: hash,
     });
     return res.redirect('/');
   } catch (error) {
@@ -52,13 +52,21 @@ router.post('/login', isNotLoggedIn, (req, res, next) => {
       return res.redirect('/');
     });
   })(req, res, next); //미들웨어 내의 미들웨어는 (req, res, next)를 붙여줘야 함.(사용자 정의 기능 추가하고 싶을 때.)
+});
+// 로그아웃 라우터
+router.get('/logout', isLoggedIn, (req, res) => {
+  req.logout(); // user 객체 제거
+  req.session.destroy(); // req.session 객체의 내용을 제거
+  res.redirect('/'); // 메인 페이지로 돌아가면 로그인 해제 되어있음.
+});
+// 카카오 로그인 추가
+router.get('/kakao', passport.authenticate('kakao'));
 
-  // 로그아웃 라우터
-  router.get('/logout', isLoggedIn, (req, res) => {
-    req.logout(); // user 객체 제거
-    req.session.destroy(); // req.session 객체의 내용을 제거
-    res.redirect('/'); // 메인 페이지로 돌아가면 로그인 해제 되어있음.
-  })
+router.get('/kakao/callback', passport.authenticate('kakao', {
+  // 카카오 전략은 로그인 성공시 내부적으로 req.login 호출.
+  failureRedirect: '/',
+}), (req, res) => {
+  res.redirect('/');
 });
 
 module.exports = router;
