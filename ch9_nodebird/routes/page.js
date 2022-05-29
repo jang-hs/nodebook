@@ -12,7 +12,7 @@ router.use((req, res, next) => {
   next();
 });
 // 자신의 프로필은 로그인해야 볼 수 있으므로 isLoggedIn 미들웨어 사용
-router.get('/profile', isLoggedIn, (res, req) => {
+router.get('/profile', isLoggedIn, (req, res) => {
   res.render('profile', { title: '내 정보 - NodeBird' });
 });
 // 로그인하지 않은 사람의 미들웨어는 isNotLoggedIn
