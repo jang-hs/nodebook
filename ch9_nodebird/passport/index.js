@@ -13,7 +13,19 @@ module.exports = () => {
   // 매 요청시 실행됨
   // serializeUser done의 두번째로 넣은 데이터가 deserializeUser의 매개변수가 됨.
   passport.deserializeUser((id, done) => {
-    User.findOne({ where: {id} })
+    // 사용자 정보를 불러올 때 팔로워와 팔로잉 목록도 같이 불러오게 됨.
+    User.findOne({ 
+      where: {id},
+      include: [{
+        model: User,
+        attributes: ['id', 'nick'],
+        as: 'Followers',
+      }, {
+        model: User,
+        attributes: ['id', 'nick'],
+        as: 'Followings'
+      }]
+    })
       .then(user => done(null, user)) // user는 req.user에 저장
       .catch(err => done(err));
   });
