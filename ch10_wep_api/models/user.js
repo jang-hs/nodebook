@@ -54,5 +54,6 @@ module.exports = class User extends Sequelize.Model {
       as: 'Followings',
       through: 'Follow',  // 생성 모델 명
     });
+    db.User.hasMany(db.Domain);
   }
 };
