@@ -49,17 +49,17 @@ router.get('/hashtag', async (req, res, next) => {
     let posts = [];
     if (hashtag) {
       // 해시태그가 있으면 모든 게시글을 가져옴.
-      post = await hashtag.getPosts({ include: [{ model: User }] });
+      posts = await hashtag.getPosts({ include: [{ model: User }] });
     }
-  
+
     return res.render('main', {
       title: `${query} | NodeBird`,
-      twits: posts
+      twits: posts,
     });
   } catch (error) {
     console.error(error);
     return next(error);
   }
-})
+});
 
 module.exports = router;
