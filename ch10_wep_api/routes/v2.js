@@ -1,14 +1,29 @@
 const express = require('express');
 const jwt = require('jsonwebtoken');
+const cors = require('cors');
+const url = require('url');
 
-const { verifyToken, deprecated } = require('./middlewares');
+const { verifyToken, apiLimiter } = require('./middlewares');
 const { Domain, User, Post, Hashtag } = require('../models');
 
 const router = express.Router();
-// v2 추가로 deprecated 되었음을 알려줘야함.
-router.use(deprecated);
 
-router.post('/token', async (req, res) => {
+router.use(async (req, res, next) => {
+  // 도메인과 일치하는 것이 있는지 확인
+  const domain = await Domain.findOne({
+    where: { host: url.parse(req.get('origin')).host },
+  });
+  if (domain) {
+    cors({
+      origin: req.get('origin'), // 허용할 도메인 속성 기입
+      credentials: true, // 쿠키 공유
+    })(req, res, next);
+  } else {
+    next();
+  }
+});
+
+router.post('/token',apiLimiter, async (req, res) => {
   const { clientSecret } = req.body;
   try {
     // 전달받은 클라이언트 비밀 키로 도메인이 등록되어 있는지 먼저 확인함.
@@ -47,12 +62,12 @@ router.post('/token', async (req, res) => {
   }
 });
 // 토큰 테스트하는 라우터. 토큰 검증 미들웨어 거친 후 검증 성공하면 토큰 내용물 응답함.
-router.get('/test', verifyToken, (req, res) => {
+router.get('/test', verifyToken, apiLimiter, (req, res) => {
   res.json(req.decoded);
 });
 
 // 내가 올린 포스트를 가져오는 라우터
-router.get('/posts/my', verifyToken, (req, res) => {
+router.get('/posts/my', verifyToken, apiLimiter, (req, res) => {
   Post.findAll({ where: { userId: req.decoded.id } })
       .then((posts) => {
         console.log(posts);
